@@ -1,0 +1,85 @@
+{
+  "app_name": "किसान साथी",
+  "tagline": "आपका स्मार्ट खेती साथी",
+  "home": {
+    "greeting": "नमस्ते,",
+    "subtitle": "आज आप क्या जानना चाहते हैं?",
+    "modules": {
+      "crop": "फसल सलाह",
+      "weather": "मौसम और अलर्ट",
+      "disease": "कीट पहचान",
+      "soil": "मिट्टी और खाद",
+      "market": "मंडी भाव",
+      "settings": "सेटिंग्स"
+    },
+    "offline_banner": "आप ऑफलाइन हैं। कैश डेटा दिखाया जा रहा है।",
+    "electricity_slot": "बिजली स्लॉट चालू",
+    "electricity_msg": "मुफ़्त सिंचाई विंडो: सुबह 5 – 8 बजे"
+  },
+  "crop": {
+    "title": "फसल सलाह",
+    "select_season": "मौसम चुनें",
+    "select_soil": "मिट्टी का प्रकार चुनें",
+    "water_availability": "पानी की उपलब्धता",
+    "get_advice": "फसल सलाह लें",
+    "recommended": "अनुशंसित फसलें",
+    "suitability": "उपयुक्तता",
+    "yield": "अनुमानित उपज",
+    "cost": "लागत",
+    "duration": "अवधि",
+    "stubble_warning": "पराली जलाने की चेतावनी",
+    "irrigation_slots": "मुफ़्त बिजली सिंचाई स्लॉट"
+  },
+  "weather": {
+    "title": "मौसम और अलर्ट",
+    "forecast": "7 दिन का पूर्वानुमान",
+    "alerts": "खेती अलर्ट",
+    "irrigation": "सिंचाई अनुसूची",
+    "frost_warning": "पाले की चेतावनी",
+    "heatwave": "लू की चेतावनी",
+    "pest_risk": "कीटों का खतरा",
+    "no_rain": "बारिश की उम्मीद नहीं"
+  },
+  "disease": {
+    "title": "कीट और रोग पहचान",
+    "take_photo": "फ़ोटो लें",
+    "gallery": "गैलरी से चुनें",
+    "detecting": "विश्लेषण किया जा रहा है...",
+    "result": "पहचान परिणाम",
+    "treatment": "उपचार",
+    "prevention": "बचाव",
+    "confidence": "विश्वास",
+    "healthy": "स्वस्थ पौधा",
+    "offline_note": "पहचान ऑफलाइन काम करती है"
+  },
+  "soil": {
+    "title": "मिट्टी और खाद",
+    "select_crop": "फसल चुनें",
+    "npk": "NPK अनुशंसा",
+    "schedule": "खाद अनुसूची",
+    "zinc": "जिंक सुधार",
+    "stubble": "पराली प्रबंधन",
+    "organic": "जैविक सुझाव"
+  },
+  "market": {
+    "title": "मंडी भाव",
+    "price": "भाव/क्विंटल",
+    "msp": "MSP",
+    "above_msp": "MSP से ऊपर ✓",
+    "below_msp": "MSP से नीचे ✗",
+    "trend": "7 दिन का रुझान",
+    "last_updated": "अंतिम अपडेट"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हो गया",
+    "retry": "पुनः प्रयास करें",
+    "per_acre": "प्रति एकड़",
+    "per_quintal": "प्रति क्विंटल",
+    "days": "दिन",
+    "high": "अधिक",
+    "medium": "मध्यम",
+    "low": "कम",
+    "acres": "एकड़"
+  }
+}

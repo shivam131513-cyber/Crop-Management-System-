@@ -1,0 +1,53 @@
+{
+  "name": "kisaan-saathi-mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "expo": "~56.0.6",
+    "expo-status-bar": "~56.0.4",
+    "expo-router": "~4.0.0",
+    "expo-sqlite": "~15.0.0",
+    "expo-camera": "~16.0.0",
+    "expo-av": "~15.0.0",
+    "expo-speech": "~13.0.0",
+    "expo-location": "~18.0.0",
+    "expo-notifications": "~0.29.0",
+    "expo-image-picker": "~16.0.0",
+    "expo-file-system": "~18.0.0",
+    "expo-localization": "~16.0.0",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.5.0",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.0",
+    "react-native-svg": "15.9.0",
+    "zustand": "^5.0.0",
+    "i18next": "^24.0.0",
+    "react-i18next": "^15.0.0",
+    "axios": "^1.7.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "react-native-gifted-charts": "^1.4.0",
+    "date-fns": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "~19.2.2",
+    "@babel/core": "^7.25.0",
+    "typescript": "~5.3.3",
+    "jest": "^29.0.0",
+    "@testing-library/react-native": "^12.0.0",
+    "jest-expo": "~56.0.0"
+  },
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "test": "jest --watchAll",
+    "lint": "expo lint"
+  },
+  "jest": {
+    "preset": "jest-expo"
+  },
+  "private": true
+}

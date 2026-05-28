@@ -1,0 +1,56 @@
+{
+  "expo": {
+    "name": "Kisaan Saathi",
+    "slug": "kisaan-saathi",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "scheme": "kisaan-saathi",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sih25010.kisaansaathi"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1B4332",
+        "foregroundImage": "./assets/adaptive-icon.png"
+      },
+      "package": "com.sih25010.kisaansaathi",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "INTERNET",
+        "RECEIVE_BOOT_COMPLETED",
+        "VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Kisaan Saathi to access your camera to detect plant diseases."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Kisaan Saathi to use your location for local weather and market prices."
+        }
+      ],
+      "expo-speech",
+      "expo-notifications"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

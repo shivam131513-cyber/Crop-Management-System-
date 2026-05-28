@@ -1,0 +1,85 @@
+{
+  "app_name": "ਕਿਸਾਨ ਸਾਥੀ",
+  "tagline": "ਤੁਹਾਡਾ ਸਮਾਰਟ ਖੇਤੀ ਸਾਥੀ",
+  "home": {
+    "greeting": "ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ,",
+    "subtitle": "ਅੱਜ ਤੁਸੀਂ ਕੀ ਜਾਣਨਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "modules": {
+      "crop": "ਫ਼ਸਲ ਸਲਾਹ",
+      "weather": "ਮੌਸਮ ਅਤੇ ਚੇਤਾਵਨੀਆਂ",
+      "disease": "ਕੀੜਾ ਪਛਾਣ",
+      "soil": "ਮਿੱਟੀ ਅਤੇ ਖਾਦ",
+      "market": "ਮੰਡੀ ਭਾਅ",
+      "settings": "ਸੈਟਿੰਗਾਂ"
+    },
+    "offline_banner": "ਤੁਸੀਂ ਔਫਲਾਈਨ ਹੋ। ਕੈਸ਼ ਡੇਟਾ ਦਿਖਾਇਆ ਜਾ ਰਿਹਾ ਹੈ।",
+    "electricity_slot": "ਬਿਜਲੀ ਸਲਾਟ ਚਾਲੂ",
+    "electricity_msg": "ਮੁਫ਼ਤ ਸਿੰਚਾਈ ਵਿੰਡੋ: ਸਵੇਰੇ 5 – 8 ਵਜੇ"
+  },
+  "crop": {
+    "title": "ਫ਼ਸਲ ਸਲਾਹ",
+    "select_season": "ਮੌਸਮ ਚੁਣੋ",
+    "select_soil": "ਮਿੱਟੀ ਦੀ ਕਿਸਮ ਚੁਣੋ",
+    "water_availability": "ਪਾਣੀ ਦੀ ਉਪਲਬਧਤਾ",
+    "get_advice": "ਫ਼ਸਲ ਸਲਾਹ ਲਓ",
+    "recommended": "ਸਿਫ਼ਾਰਸ਼ੀ ਫ਼ਸਲਾਂ",
+    "suitability": "ਅਨੁਕੂਲਤਾ",
+    "yield": "ਅਨੁਮਾਨਿਤ ਝਾੜ",
+    "cost": "ਲਾਗਤ",
+    "duration": "ਮਿਆਦ",
+    "stubble_warning": "ਪਰਾਲੀ ਸਾੜਨ ਦੀ ਚੇਤਾਵਨੀ",
+    "irrigation_slots": "ਮੁਫ਼ਤ ਬਿਜਲੀ ਸਿੰਚਾਈ ਸਲਾਟ"
+  },
+  "weather": {
+    "title": "ਮੌਸਮ ਅਤੇ ਚੇਤਾਵਨੀਆਂ",
+    "forecast": "7 ਦਿਨਾਂ ਦਾ ਪੂਰਵਅਨੁਮਾਨ",
+    "alerts": "ਖੇਤੀ ਚੇਤਾਵਨੀਆਂ",
+    "irrigation": "ਸਿੰਚਾਈ ਸਮਾਂ-ਸੂਚੀ",
+    "frost_warning": "ਠੰਡ ਦੀ ਚੇਤਾਵਨੀ",
+    "heatwave": "ਲੂ ਦੀ ਚੇਤਾਵਨੀ",
+    "pest_risk": "ਕੀੜਿਆਂ ਦਾ ਖ਼ਤਰਾ",
+    "no_rain": "ਬਾਰਸ਼ ਦੀ ਉਮੀਦ ਨਹੀਂ"
+  },
+  "disease": {
+    "title": "ਕੀੜਾ ਅਤੇ ਬਿਮਾਰੀ ਪਛਾਣ",
+    "take_photo": "ਫ਼ੋਟੋ ਲਓ",
+    "gallery": "ਗੈਲਰੀ ਤੋਂ ਚੁਣੋ",
+    "detecting": "ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+    "result": "ਪਛਾਣ ਨਤੀਜਾ",
+    "treatment": "ਇਲਾਜ",
+    "prevention": "ਬਚਾਅ",
+    "confidence": "ਵਿਸ਼ਵਾਸ",
+    "healthy": "ਤੰਦਰੁਸਤ ਪੌਦਾ",
+    "offline_note": "ਪਛਾਣ ਔਫਲਾਈਨ ਕੰਮ ਕਰਦੀ ਹੈ"
+  },
+  "soil": {
+    "title": "ਮਿੱਟੀ ਅਤੇ ਖਾਦ",
+    "select_crop": "ਫ਼ਸਲ ਚੁਣੋ",
+    "npk": "NPK ਸਿਫ਼ਾਰਸ਼",
+    "schedule": "ਖਾਦ ਸਮਾਂ-ਸੂਚੀ",
+    "zinc": "ਜ਼ਿੰਕ ਸੁਧਾਰ",
+    "stubble": "ਪਰਾਲੀ ਪ੍ਰਬੰਧਨ",
+    "organic": "ਜੈਵਿਕ ਸੁਝਾਅ"
+  },
+  "market": {
+    "title": "ਮੰਡੀ ਭਾਅ",
+    "price": "ਭਾਅ/ਕੁਇੰਟਲ",
+    "msp": "MSP",
+    "above_msp": "MSP ਤੋਂ ਉੱਪਰ ✓",
+    "below_msp": "MSP ਤੋਂ ਹੇਠਾਂ ✗",
+    "trend": "7 ਦਿਨਾਂ ਦਾ ਰੁਝਾਨ",
+    "last_updated": "ਆਖਰੀ ਵਾਰ ਅਪਡੇਟ"
+  },
+  "common": {
+    "loading": "ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "error": "ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ",
+    "retry": "ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "per_acre": "ਪ੍ਰਤੀ ਏਕੜ",
+    "per_quintal": "ਪ੍ਰਤੀ ਕੁਇੰਟਲ",
+    "days": "ਦਿਨ",
+    "high": "ਵੱਧ",
+    "medium": "ਦਰਮਿਆਨਾ",
+    "low": "ਘੱਟ",
+    "acres": "ਏਕੜ"
+  }
+}

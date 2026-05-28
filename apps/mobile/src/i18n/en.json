@@ -1,0 +1,85 @@
+{
+  "app_name": "Kisaan Saathi",
+  "tagline": "Your Smart Farming Companion",
+  "home": {
+    "greeting": "Sat Sri Akal,",
+    "subtitle": "What would you like to know today?",
+    "modules": {
+      "crop": "Crop Advisory",
+      "weather": "Weather & Alerts",
+      "disease": "Pest Detection",
+      "soil": "Soil & Fertilizer",
+      "market": "Market Prices",
+      "settings": "Settings"
+    },
+    "offline_banner": "You're offline. Showing cached data.",
+    "electricity_slot": "Electricity Slot Active",
+    "electricity_msg": "Free irrigation window: 5 AM – 8 AM"
+  },
+  "crop": {
+    "title": "Crop Advisory",
+    "select_season": "Select Season",
+    "select_soil": "Select Soil Type",
+    "water_availability": "Water Availability",
+    "get_advice": "Get Crop Advice",
+    "recommended": "Recommended Crops",
+    "suitability": "Suitability",
+    "yield": "Expected Yield",
+    "cost": "Input Cost",
+    "duration": "Duration",
+    "stubble_warning": "Stubble Burning Warning",
+    "irrigation_slots": "Free Electricity Irrigation Slots"
+  },
+  "weather": {
+    "title": "Weather & Alerts",
+    "forecast": "7-Day Forecast",
+    "alerts": "Farm Alerts",
+    "irrigation": "Irrigation Schedule",
+    "frost_warning": "Frost Warning",
+    "heatwave": "Heatwave Alert",
+    "pest_risk": "Pest Risk",
+    "no_rain": "No Rain Expected"
+  },
+  "disease": {
+    "title": "Pest & Disease Detection",
+    "take_photo": "Take Photo",
+    "gallery": "Choose from Gallery",
+    "detecting": "Analyzing...",
+    "result": "Detection Result",
+    "treatment": "Treatment",
+    "prevention": "Prevention",
+    "confidence": "Confidence",
+    "healthy": "Healthy Plant",
+    "offline_note": "Detection works offline"
+  },
+  "soil": {
+    "title": "Soil & Fertilizer",
+    "select_crop": "Select Crop",
+    "npk": "NPK Recommendation",
+    "schedule": "Fertilizer Schedule",
+    "zinc": "Zinc Correction",
+    "stubble": "Stubble Management",
+    "organic": "Organic Tip"
+  },
+  "market": {
+    "title": "Market Prices",
+    "price": "Price/Quintal",
+    "msp": "MSP",
+    "above_msp": "Above MSP ✓",
+    "below_msp": "Below MSP ✗",
+    "trend": "7-Day Trend",
+    "last_updated": "Last Updated"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "per_acre": "per acre",
+    "per_quintal": "per quintal",
+    "days": "days",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "acres": "acres"
+  }
+}
