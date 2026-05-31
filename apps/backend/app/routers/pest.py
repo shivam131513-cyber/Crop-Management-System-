@@ -12,6 +12,7 @@ DISEASE_TREATMENTS = {
         "name": "Wheat Brown Rust",
         "name_hi": "गेहूं का भूरा रतुआ",
         "name_pa": "ਕਣਕ ਦਾ ਭੂਰਾ ਰਤੂਆ",
+        "crop": "wheat",
         "treatment": "Spray Propiconazole 25% EC @ 0.1% or Tebuconazole 250 EC @ 0.1%. Apply in morning.",
         "treatment_hi": "प्रोपिकोनाज़ोल 25% EC @ 0.1% छिड़काव करें। सुबह लगाएं।",
         "treatment_pa": "ਪ੍ਰੋਪੀਕੋਨਾਜ਼ੋਲ 25% EC @ 0.1% ਸਪਰੇਅ ਕਰੋ।",
@@ -22,6 +23,7 @@ DISEASE_TREATMENTS = {
         "name": "Rice Brown Spot",
         "name_hi": "चावल का भूरा धब्बा",
         "name_pa": "ਚੌਲ ਦਾ ਭੂਰਾ ਧੱਬਾ",
+        "crop": "rice",
         "treatment": "Spray Mancozeb 75 WP @ 2.5 g/L. Ensure proper drainage.",
         "treatment_hi": "मैनकोज़ेब 75 WP @ 2.5 ग्राम/लीटर छिड़काव करें।",
         "treatment_pa": "ਮੈਨਕੋਜ਼ੇਬ 75 WP @ 2.5 g/L ਸਪਰੇਅ ਕਰੋ।",
@@ -32,6 +34,7 @@ DISEASE_TREATMENTS = {
         "name": "Maize Northern Leaf Blight",
         "name_hi": "मक्का का पत्ती झुलसा",
         "name_pa": "ਮੱਕੀ ਦਾ ਪੱਤਾ ਝੁਲਸਣਾ",
+        "crop": "maize",
         "treatment": "Spray Mancozeb 75 WP + Carbendazim 50 WP @ 2 g/L. Improve air circulation.",
         "treatment_hi": "मैनकोज़ेब + कार्बेन्डाज़िम @ 2 ग्राम/लीटर छिड़काव करें।",
         "treatment_pa": "ਮੈਨਕੋਜ਼ੇਬ + ਕਾਰਬੇਂਡਾਜ਼ਿਮ @ 2 g/L ਸਪਰੇਅ ਕਰੋ।",
@@ -42,16 +45,69 @@ DISEASE_TREATMENTS = {
         "name": "Cotton Pink Bollworm",
         "name_hi": "कपास का गुलाबी सुंडी",
         "name_pa": "ਕਪਾਹ ਦਾ ਗੁਲਾਬੀ ਸੁੰਡੀ",
+        "crop": "cotton",
         "treatment": "Spray Chlorpyriphos 20 EC @ 2 mL/L or Emamectin benzoate 5 SG @ 0.4 g/L.",
         "treatment_hi": "क्लोरपाइरिफोस 20 EC @ 2 मिली/लीटर या एमामेक्टिन बेंज़ोएट 5 SG @ 0.4 ग्राम/लीटर।",
         "treatment_pa": "ਕਲੋਰਪਾਈਰੀਫੋਸ 20 EC @ 2 mL/L ਸਪਰੇਅ ਕਰੋ।",
         "severity": "high",
         "prevention": "Install pheromone traps @ 5/acre. Monitor from August.",
     },
+    "mustard_aphids": {
+        "name": "Mustard Aphid (Lipaphis erysimi)",
+        "name_hi": "सरसों का माहू",
+        "name_pa": "ਸਰ੍ਹੋਂ ਦਾ ਮਾਹੂ",
+        "crop": "mustard",
+        "treatment": (
+            "Spray Dimethoate 30 EC @ 1 mL/L or Imidacloprid 17.8 SL @ 0.5 mL/L. "
+            "Apply early morning to protect pollinators."
+        ),
+        "treatment_hi": "डाइमेथोएट 30 EC @ 1 मिली/लीटर छिड़काव करें। सुबह जल्दी करें।",
+        "treatment_pa": "ਡਾਈਮੇਥੋਏਟ 30 EC @ 1 mL/L ਸਪਰੇਅ ਕਰੋ। ਸਵੇਰੇ ਜਲਦੀ ਕਰੋ।",
+        "severity": "high",
+        "prevention": (
+            "Sow by Oct 15 to avoid peak aphid season. "
+            "Use yellow sticky traps. Maintain field hygiene."
+        ),
+    },
+    "potato_early_blight": {
+        "name": "Potato Early Blight (Alternaria solani)",
+        "name_hi": "आलू का अगेती झुलसा",
+        "name_pa": "ਆਲੂ ਦਾ ਸ਼ੁਰੂਆਤੀ ਝੁਲਸਣਾ",
+        "crop": "potato",
+        "treatment": (
+            "Spray Mancozeb 75 WP @ 2.0 g/L or Chlorothalonil 75 WP @ 2.0 g/L. "
+            "Repeat every 7–10 days during humid weather."
+        ),
+        "treatment_hi": "मैनकोज़ेब 75 WP @ 2.0 ग्राम/लीटर, हर 7–10 दिन में छिड़काव करें।",
+        "treatment_pa": "ਮੈਨਕੋਜ਼ੇਬ 75 WP @ 2.0 g/L, ਹਰ 7–10 ਦਿਨ ਸਪਰੇਅ ਕਰੋ।",
+        "severity": "medium",
+        "prevention": (
+            "Use certified seed. Avoid overhead irrigation. "
+            "Destroy infected plant debris after harvest."
+        ),
+    },
+    "wheat_yellow_rust": {
+        "name": "Wheat Yellow Rust (Stripe Rust)",
+        "name_hi": "गेहूं का पीला रतुआ",
+        "name_pa": "ਕਣਕ ਦਾ ਪੀਲਾ ਰਤੂਆ",
+        "crop": "wheat",
+        "treatment": (
+            "Spray Propiconazole 25 EC @ 0.1% or Triadimefon 25 WP @ 0.1% at first sign. "
+            "Repeat after 15 days if needed."
+        ),
+        "treatment_hi": "प्रोपिकोनाज़ोल 25 EC @ 0.1% पहले लक्षण पर छिड़काव, 15 दिन बाद दोहराएं।",
+        "treatment_pa": "ਪ੍ਰੋਪੀਕੋਨਾਜ਼ੋਲ 25 EC @ 0.1% ਪਹਿਲੇ ਲੱਛਣ 'ਤੇ ਸਪਰੇਅ ਕਰੋ।",
+        "severity": "high",
+        "prevention": (
+            "Use resistant variety PBW-723, WH-1105. "
+            "Avoid late sowing (after Nov 15). Monitor weekly from January."
+        ),
+    },
     "healthy": {
         "name": "Healthy Plant",
         "name_hi": "स्वस्थ पौधा",
         "name_pa": "ਤੰਦਰੁਸਤ ਪੌਦਾ",
+        "crop": "any",
         "treatment": "No treatment needed. Continue regular care.",
         "treatment_hi": "कोई उपचार नहीं चाहिए। सामान्य देखभाल जारी रखें।",
         "treatment_pa": "ਕੋਈ ਇਲਾਜ ਦੀ ਲੋੜ ਨਹੀਂ।",
@@ -59,6 +115,7 @@ DISEASE_TREATMENTS = {
         "prevention": "Maintain soil health and balanced nutrition.",
     },
 }
+
 
 
 class DetectResponse(BaseModel):
