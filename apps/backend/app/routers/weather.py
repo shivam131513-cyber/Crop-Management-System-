@@ -1,5 +1,6 @@
 import os
 import httpx
+from datetime import datetime
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 
@@ -31,6 +32,167 @@ DISTRICT_COORDS = {
     "fatehgarh sahib": (30.6491, 76.3902),
     "tarn taran":   (31.4510, 74.9275),
 }
+
+# Crop sowing windows for Punjab (month numbers, inclusive)
+CROP_SOWING_WINDOWS = {
+    "wheat":   {"months": [10, 11], "label": "Oct 25 – Nov 15", "season": "rabi",
+                "tip": "Optimal sowing. Use PBW-723 or HD-3086 variety. Avoid after Nov 25 (yield loss ~20%)."},
+    "rice":    {"months": [6, 7],   "label": "Jun 10 – Jul 15", "season": "kharif",
+                "tip": "Transplant after June 10 (PPCB order). SRI method saves 30% water."},
+    "maize":   {"months": [6, 7],   "label": "Jun 1 – Jun 20",  "season": "kharif",
+                "tip": "Early sow to avoid pink stalk borer. Use hybrid varieties DHM-117."},
+    "cotton":  {"months": [4, 5, 6], "label": "Apr 15 – Jun 15", "season": "kharif",
+                "tip": "Plant Bt-cotton before June 15. Avoid July planting (late season risk)."},
+    "mustard": {"months": [9, 10],  "label": "Sep 25 – Oct 15", "season": "rabi",
+                "tip": "Early sow avoids aphid peak. Ideal for Malwa zone sandy soils."},
+    "potato":  {"months": [9, 10, 11], "label": "Sep 25 – Nov 10", "season": "rabi",
+                "tip": "Doaba & Majha zones best. Use certified seed (Kufri Pukhraj/Jyoti)."},
+    "moong":   {"months": [4, 5, 6, 7], "label": "Apr – Jul",   "season": "kharif/zaid",
+                "tip": "Short-duration (60d). Ideal gap crop between wheat and rice."},
+    "sunflower": {"months": [1, 2, 10, 11], "label": "Jan–Feb or Oct–Nov", "season": "rabi/zaid",
+                  "tip": "Drought-tolerant. Good substitute for water-scarce areas."},
+}
+
+
+def get_coords(district: str):
+    return DISTRICT_COORDS.get(district.lower(), (30.9010, 75.8573))  # default: Ludhiana
+
+
+def get_sowing_advice(month: int) -> list:
+    """Return list of crops whose sowing window includes this month."""
+    advice = []
+    for crop, data in CROP_SOWING_WINDOWS.items():
+        if month in data["months"]:
+            advice.append({
+                "crop": crop.capitalize(),
+                "sowing_window": data["label"],
+                "season": data["season"],
+                "tip": data["tip"],
+            })
+    return advice
+
+
+def build_alerts(forecast: dict) -> list:
+    """Generate farm-relevant alerts from OWM forecast data."""
+    alerts = []
+    rain_hours = 0
+
+    for item in forecast.get("list", [])[:16]:  # next 48h (3h intervals)
+        temp_max = item["main"]["temp_max"]
+        temp_min = item["main"]["temp_min"]
+        humidity = item["main"]["humidity"]
+        rain_3h = item.get("rain", {}).get("3h", 0)
+        rain_hours += rain_3h
+
+        if temp_min < 4:
+            alerts.append({
+                "type": "frost",
+                "severity": "high",
+                "message": f"Frost risk: {temp_min:.1f}°C expected. Cover sensitive crops.",
+                "message_pa": "ਠੰਡ ਦਾ ਖ਼ਤਰਾ। ਫ਼ਸਲਾਂ ਨੂੰ ਢੱਕੋ।",
+            })
+        if temp_max > 42:
+            alerts.append({
+                "type": "heatwave",
+                "severity": "high",
+                "message": f"Heatwave: {temp_max:.1f}°C. Irrigate early morning.",
+                "message_pa": "ਲੂ ਦਾ ਖ਼ਤਰਾ। ਸਵੇਰੇ ਸਿੰਚਾਈ ਕਰੋ।",
+            })
+        if humidity > 80:
+            alerts.append({
+                "type": "pest_risk",
+                "severity": "medium",
+                "message": "High humidity — risk of fungal disease and brown planthopper.",
+                "message_pa": "ਨਮੀ ਵੱਧ ਹੈ — ਕੀੜਿਆਂ ਦਾ ਖ਼ਤਰਾ।",
+            })
+
+    if rain_hours < 2:
+        alerts.append({
+            "type": "irrigation",
+            "severity": "info",
+            "message": "No rain expected (48h). Use electricity slot: 05:00–08:00 or 22:00–01:00.",
+            "message_pa": "ਬਾਰਸ਼ ਨਹੀਂ। ਬਿਜਲੀ ਸਲਾਟ ਵਰਤੋ: ਸਵੇਰੇ 5–8 ਜਾਂ ਰਾਤ 10–1।",
+        })
+
+    return alerts
+
+
+@router.get("/forecast")
+async def get_forecast(
+    district: str = Query("ludhiana", description="Punjab district name"),
+):
+    """
+    7-day weather forecast with farm-specific alerts and crop sowing advice.
+    Uses Punjab district centroids; falls back to mock data if no API key.
+    Includes month-specific sowing windows for all major Punjab crops.
+    """
+    current_month = datetime.now().month
+    sowing_advice = get_sowing_advice(current_month)
+
+    if not OWM_KEY:
+        return _mock_forecast(district, sowing_advice)
+
+    lat, lon = get_coords(district)
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        try:
+            resp = await client.get(
+                f"{OWM_BASE}/forecast",
+                params={"lat": lat, "lon": lon, "appid": OWM_KEY, "units": "metric", "cnt": 40},
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        except httpx.HTTPError:
+            return _mock_forecast(district, sowing_advice)
+
+    alerts = build_alerts(data)
+    return {
+        "district": district,
+        "coordinates": {"lat": lat, "lon": lon},
+        "forecast": data.get("list", [])[:16],
+        "alerts": alerts,
+        "sowing_advice": sowing_advice,
+        "irrigation_slots": [
+            {"label": "Morning", "start": "05:00", "end": "08:00"},
+            {"label": "Night",   "start": "22:00", "end": "01:00"},
+        ],
+    }
+
+
+def _mock_forecast(district: str, sowing_advice: list) -> dict:
+    """Offline/demo mock weather for Ludhiana region."""
+    return {
+        "district": district,
+        "coordinates": {"lat": 30.90, "lon": 75.85},
+        "mock": True,
+        "forecast": [
+            {
+                "dt_txt": "2025-06-01 06:00:00",
+                "main": {"temp": 32.1, "temp_max": 38.0, "temp_min": 26.0, "humidity": 55},
+                "weather": [{"description": "partly cloudy", "icon": "02d"}],
+                "rain": {},
+            },
+            {
+                "dt_txt": "2025-06-01 09:00:00",
+                "main": {"temp": 36.5, "temp_max": 40.0, "temp_min": 29.0, "humidity": 48},
+                "weather": [{"description": "clear sky", "icon": "01d"}],
+                "rain": {},
+            },
+        ],
+        "alerts": [
+            {
+                "type": "irrigation",
+                "severity": "info",
+                "message": "No rain expected. Use electricity slot: 05:00–08:00.",
+                "message_pa": "ਬਾਰਸ਼ ਨਹੀਂ। ਬਿਜਲੀ ਸਲਾਟ: ਸਵੇਰੇ 5–8।",
+            }
+        ],
+        "sowing_advice": sowing_advice,
+        "irrigation_slots": [
+            {"label": "Morning", "start": "05:00", "end": "08:00"},
+            {"label": "Night",   "start": "22:00", "end": "01:00"},
+        ],
+    }
+
 
 
 def get_coords(district: str):
