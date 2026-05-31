@@ -64,3 +64,42 @@ class SyncQueue(Base):
     retries = Column(Integer, default=0)
     synced = Column(Boolean, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class SoilReport(Base):
+    """Stores lab or self-reported soil test results per farmer field."""
+    __tablename__ = "soil_reports"
+
+    id = Column(Integer, primary_key=True, index=True)
+    farmer_id = Column(Integer, nullable=True, index=True)
+    district = Column(String(50))
+    soil_zone = Column(String(20), nullable=True)       # majha | malwa | doaba
+    field_name = Column(String(100), nullable=True)     # farmer's field label
+    ph = Column(Float, nullable=True)
+    nitrogen = Column(String(10), nullable=True)        # low | medium | high
+    phosphorus = Column(String(10), nullable=True)
+    potassium = Column(String(10), nullable=True)
+    zinc_ppm = Column(Float, nullable=True)             # zinc in ppm
+    organic_carbon_pct = Column(Float, nullable=True)  # OC %
+    water_table_depth_ft = Column(Float, nullable=True) # depth to water table
+    lab_ref_number = Column(String(50), nullable=True)  # Soil Health Card ref
+    tested_at = Column(DateTime(timezone=True), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class IrrigationLog(Base):
+    """Logs each irrigation event to track water usage and electricity slot compliance."""
+    __tablename__ = "irrigation_logs"
+
+    id = Column(Integer, primary_key=True, index=True)
+    farmer_id = Column(Integer, nullable=True, index=True)
+    crop_name = Column(String(100))
+    field_name = Column(String(100), nullable=True)
+    irrigation_date = Column(DateTime(timezone=True))
+    electricity_slot = Column(String(20), nullable=True)  # morning | night | other
+    water_amount_liters = Column(Float, nullable=True)
+    duration_minutes = Column(Integer, nullable=True)
+    method = Column(String(50), nullable=True)            # drip | flood | sprinkler
+    notes = Column(Text, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
