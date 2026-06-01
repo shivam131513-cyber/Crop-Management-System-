@@ -5,6 +5,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from app.routers import crop, weather, pest, soil, market, auth
 from app.db.database import engine
 from app.db import models
+from app.middleware.rate_limit import RateLimitMiddleware
 
 # Create tables on startup
 models.Base.metadata.create_all(bind=engine)
@@ -17,7 +18,7 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# Middleware
+# Middleware  (registered inner → outer; rate limiter is outermost layer)
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(
     CORSMiddleware,
@@ -26,6 +27,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+# Rate limiting — uses Redis when REDIS_URL is set, falls back to in-memory
+app.add_middleware(RateLimitMiddleware)
 
 # Routers
 app.include_router(auth.router,    prefix="/auth",    tags=["Auth"])
