@@ -3,9 +3,10 @@ from typing import Optional
 from app.models.crop import (
     CropRecommendRequest, CropRecommendResponse,
     CropCalendarMonth, CropCalendarResponse, CalendarActivity,
+    ProfitEstimateRequest, ProfitBreakdown,
 )
 from app.services.crop_service import recommend_crops
-from app.services.crop_knowledge import CROP_CALENDAR, DISTRICT_ZONE_MAP
+from app.services.crop_knowledge import CROP_CALENDAR, DISTRICT_ZONE_MAP, CROP_PROFILES
 
 router = APIRouter()
 
@@ -107,4 +108,79 @@ async def get_crop_calendar(
         zone=zone,
         district=district,
         calendar=calendar_months,
+    )
+
+
+@router.post("/profit-estimate", response_model=ProfitBreakdown)
+async def get_profit_estimate(req: ProfitEstimateRequest):
+    """
+    Estimate profit/loss for a given crop and land size.
+
+    - Uses MSP as the default selling price (official Govt. of India rate).
+    - If the farmer provides `selling_price_per_quintal`, that is used instead.
+    - Crops without a government MSP (e.g. potato, vegetables) use an estimated market price.
+    - Returns full cost-revenue breakdown with net profit, margin %, and advice.
+    """
+    crop_key = req.crop.lower().strip()
+    data = CROP_PROFILES.get(crop_key)
+
+    if not data:
+        available = ", ".join(CROP_PROFILES.keys())
+        raise HTTPException(
+            status_code=404,
+            detail=f"Crop '{req.crop}' not found. Available crops: {available}",
+        )
+
+    if req.land_size_acres <= 0:
+        raise HTTPException(status_code=422, detail="land_size_acres must be greater than 0.")
+
+    # Determine the price per quintal to use
+    msp = data.get("msp_per_quintal")
+
+    if req.selling_price_per_quintal is not None:
+        price = req.selling_price_per_quintal
+        price_source = "Market"
+    elif msp is not None:
+        price = msp
+        price_source = "MSP"
+    else:
+        # No MSP crops: use a rough estimated market price
+        # Potato: ₹800/qtl, Vegetables: ₹1200/qtl (conservative)
+        estimated_prices = {
+            "potato": 800.0,
+            "vegetables_mixed": 1200.0,
+        }
+        price = estimated_prices.get(crop_key, 1000.0)
+        price_source = "Estimated"
+
+    # Financial calculations
+    input_cost_total = round(data["input_cost_per_acre"] * req.land_size_acres, 2)
+    expected_yield_total = round(data["expected_yield_qtl_per_acre"] * req.land_size_acres, 2)
+    gross_revenue = round(expected_yield_total * price, 2)
+    net_profit = round(gross_revenue - input_cost_total, 2)
+    profit_per_acre = round(net_profit / req.land_size_acres, 2)
+    profit_margin_pct = round((net_profit / gross_revenue) * 100, 1) if gross_revenue > 0 else 0.0
+
+    # Stubble warning only for rice
+    stubble_warning = None
+    if not data["stubble_friendly"]:
+        stubble_warning = data.get("stubble_warning")
+
+    return ProfitBreakdown(
+        crop_name=data["name"],
+        crop_name_hi=data["local_name_hi"],
+        crop_name_pa=data["local_name_pa"],
+        land_size_acres=req.land_size_acres,
+        input_cost_total=input_cost_total,
+        expected_yield_total_qtl=expected_yield_total,
+        price_used_per_quintal=price,
+        price_source=price_source,
+        gross_revenue=gross_revenue,
+        net_profit=net_profit,
+        profit_per_acre=profit_per_acre,
+        profit_margin_pct=profit_margin_pct,
+        is_profitable=net_profit > 0,
+        msp_per_quintal=msp,
+        stubble_warning=stubble_warning,
+        advice=data["advice"],
     )

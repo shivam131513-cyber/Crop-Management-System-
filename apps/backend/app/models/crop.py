@@ -78,3 +78,30 @@ class CropCalendarResponse(BaseModel):
     zone: str
     district: Optional[str] = None
     calendar: List[CropCalendarMonth]
+
+
+# ── Profit Estimate Models ────────────────────────────────────────────────────
+
+class ProfitEstimateRequest(BaseModel):
+    crop: str               # must match a key in CROP_PROFILES (e.g. "wheat", "rice")
+    land_size_acres: float  # farmer's field size
+    selling_price_per_quintal: Optional[float] = None  # if None, MSP is used
+
+
+class ProfitBreakdown(BaseModel):
+    crop_name: str
+    crop_name_hi: str
+    crop_name_pa: str
+    land_size_acres: float
+    input_cost_total: float           # input_cost_per_acre * land_size_acres
+    expected_yield_total_qtl: float   # yield_per_acre * land_size_acres
+    price_used_per_quintal: float     # MSP or user-provided
+    price_source: str                 # "MSP" | "Market" | "Estimated"
+    gross_revenue: float              # yield_total * price_per_quintal
+    net_profit: float                 # gross_revenue - input_cost_total
+    profit_per_acre: float            # net_profit / land_size_acres
+    profit_margin_pct: float          # (net_profit / gross_revenue) * 100
+    is_profitable: bool
+    msp_per_quintal: Optional[float]  # for reference
+    stubble_warning: Optional[str] = None
+    advice: str
