@@ -52,3 +52,29 @@ class CropRecommendResponse(BaseModel):
     irrigation_slots: Optional[List[str]] = None   # Punjab electricity windows
     stubble_warning: Optional[str] = None
     season_tip: Optional[str] = None
+
+
+class CalendarActivity(BaseModel):
+    sow: List[str]
+    fertilize: List[str]
+    irrigate: List[str]
+    harvest: List[str]
+    pest_watch: List[str]
+    general_tip: str
+    general_tip_pa: str
+
+
+class CropCalendarMonth(BaseModel):
+    month: int
+    month_name: str
+    month_name_hi: str
+    month_name_pa: str
+    season: str
+    activities: CalendarActivity
+    zone_note: Optional[str] = None   # filtered for requested zone
+
+
+class CropCalendarResponse(BaseModel):
+    zone: str
+    district: Optional[str] = None
+    calendar: List[CropCalendarMonth]
