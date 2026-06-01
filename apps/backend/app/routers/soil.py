@@ -399,3 +399,204 @@ async def get_zones():
             },
         ]
     }
+
+
+# -- Soil Health Report -------------------------------------------------------
+
+class SoilHealthRequest(BaseModel):
+    district: str
+    nitrogen: str       # low | medium | high
+    phosphorus: str     # low | medium | high
+    potassium: str      # low | medium | high
+    ph: Optional[float] = None
+    zinc: Optional[str] = None           # deficient | marginal | sufficient
+    organic_carbon: Optional[str] = None # low | medium | high
+
+
+class SoilDeficiency(BaseModel):
+    nutrient: str
+    status: str          # deficient | low | adequate | excess
+    severity: str        # critical | moderate | minor | none
+    correction: str
+    correction_pa: str
+
+
+class SoilHealthReport(BaseModel):
+    district: str
+    zone: str
+    health_score: int
+    health_rating: str
+    health_rating_pa: str
+    deficiencies: List[SoilDeficiency]
+    correction_plan: List[str]
+    organic_matter_advice: str
+    ph_advice: Optional[str] = None
+    overall_tip: str
+    overall_tip_pa: str
+
+
+@router.post("/health-report", response_model=SoilHealthReport)
+async def get_soil_health_report(req: SoilHealthRequest):
+    """
+    Generate a soil health diagnostic report for a Punjab farmer.
+    Diagnoses N, P, K, Zn, pH, and organic carbon.
+    Returns a 0-100 health score with rating (poor/fair/good/excellent)
+    and a prioritized correction plan with specific fertilizer names.
+    """
+    from app.services.crop_knowledge import DISTRICT_ZONE_MAP
+
+    zone = DISTRICT_ZONE_MAP.get(req.district.strip().lower(), "malwa")
+    zone_defaults = ZONE_SOIL_DEFAULTS.get(zone, ZONE_SOIL_DEFAULTS["malwa"])
+
+    zinc_status = req.zinc or zone_defaults["zinc"]
+    oc_status = req.organic_carbon or "low"
+
+    deficiencies: List[SoilDeficiency] = []
+    score = 100
+    correction_plan: List[str] = []
+
+    # -- Nitrogen ---------------------------------------------------------------
+    if req.nitrogen == "low":
+        score -= 20
+        deficiencies.append(SoilDeficiency(
+            nutrient="Nitrogen (N)", status="low", severity="critical",
+            correction="Apply Urea (46 percent N) at 55 kg/acre split in 2-3 doses.",
+            correction_pa="\u0a2f\u0a42\u0a30\u0a40\u0a06 @ 55 \u0a15\u0a3f\u0a32\u0a4b/\u0a0f\u0a15\u0a5c 2-3 \u0a35\u0a3e\u0a30 \u0a35\u0a70\u0a21 \u0a15\u0a47 \u0a2a\u0a3e\u0a13\u0964",
+        ))
+        correction_plan.append("[HIGH PRIORITY] Apply Urea at 55 kg/acre split in 2-3 doses.")
+    elif req.nitrogen == "medium":
+        score -= 5
+        deficiencies.append(SoilDeficiency(
+            nutrient="Nitrogen (N)", status="adequate", severity="minor",
+            correction="Maintain current N levels. Avoid over-application to prevent lodging.",
+            correction_pa="\u0a2e\u0a4c\u0a1c\u0a42\u0a26\u0a3e N \u0a2a\u0a71\u0a27\u0a30 \u0a2c\u0a23\u0a3e\u0a08 \u0a30\u0a71\u0a16\u0a4b\u0964",
+        ))
+    else:
+        deficiencies.append(SoilDeficiency(
+            nutrient="Nitrogen (N)", status="excess", severity="none",
+            correction="Reduce nitrogen dose by 25 percent. Avoid urea until next soil test.",
+            correction_pa="N \u0a1c\u0a3c\u0a3f\u0a06\u0a26\u0a3e \u0a39\u0a48\u0964 \u0a28\u0a3e\u0a08\u0a1f\u0a4d\u0a30\u0a4b\u0a1c\u0a28 \u0a26\u0a40 \u0a2e\u0a3e\u0a24\u0a30\u0a3e 25 \u0a2a\u0a4d\u0a30\u0a24\u0a3f\u0a38\u0a3c\u0a24 \u0a18\u0a1f\u0a3e\u0a13\u0964",
+        ))
+
+    # -- Phosphorus -------------------------------------------------------------
+    if req.phosphorus == "low":
+        score -= 18
+        deficiencies.append(SoilDeficiency(
+            nutrient="Phosphorus (P)", status="low", severity="critical",
+            correction="Apply DAP at 50 kg/acre as basal dose at sowing.",
+            correction_pa="DAP @ 50 \u0a15\u0a3f\u0a32\u0a4b/\u0a0f\u0a15\u0a5c \u0a2c\u0a40\u0a1c\u0a3e\u0a08 \u0a38\u0a2e\u0a47\u0a02 \u0a1c\u0a3c\u0a2e\u0a40\u0a28 \u0a35\u0a3f\u0a71\u0a1a \u0a2e\u0a3f\u0a32\u0a3e\u0a13\u0964",
+        ))
+        correction_plan.append("[HIGH PRIORITY] Basal DAP 50 kg/acre at sowing - do not split.")
+    elif req.phosphorus == "medium":
+        score -= 4
+        deficiencies.append(SoilDeficiency(
+            nutrient="Phosphorus (P)", status="adequate", severity="minor",
+            correction="Apply SSP at 50 kg/acre for supplemental P.",
+            correction_pa="SSP @ 50 \u0a15\u0a3f\u0a32\u0a4b/\u0a0f\u0a15\u0a5c \u0a2a\u0a3e\u0a13\u0964",
+        ))
+    else:
+        deficiencies.append(SoilDeficiency(
+            nutrient="Phosphorus (P)", status="adequate", severity="none",
+            correction="Phosphorus is adequate. No additional P application needed.",
+            correction_pa="\u0a2b\u0a3c\u0a3e\u0a38\u0a2b\u0a3c\u0a4b\u0a30\u0a38 \u0a15\u0a3e\u0a2b\u0a3c\u0a40 \u0a39\u0a48\u0964",
+        ))
+
+    # -- Potassium --------------------------------------------------------------
+    if req.potassium == "low":
+        score -= 15
+        deficiencies.append(SoilDeficiency(
+            nutrient="Potassium (K)", status="low", severity="moderate",
+            correction="Apply MOP (Muriate of Potash) at 25 kg/acre as basal.",
+            correction_pa="MOP @ 25 \u0a15\u0a3f\u0a32\u0a4b/\u0a0f\u0a15\u0a5c \u0a2c\u0a40\u0a1c\u0a3e\u0a08 \u0a38\u0a2e\u0a47\u0a02 \u0a2a\u0a3e\u0a13\u0964",
+        ))
+        correction_plan.append("Apply MOP at 25 kg/acre at sowing.")
+    elif req.potassium == "medium":
+        deficiencies.append(SoilDeficiency(
+            nutrient="Potassium (K)", status="adequate", severity="none",
+            correction="Potassium is adequate. Continue crop rotation to maintain levels.",
+            correction_pa="\u0a2a\u0a4b\u0a1f\u0a3e\u0a38\u0a3c \u0a1c\u0a3c\u0a30\u0a42\u0a30\u0a40 \u0a39\u0a48\u0964",
+        ))
+    else:
+        deficiencies.append(SoilDeficiency(
+            nutrient="Potassium (K)", status="excess", severity="none",
+            correction="High K - no potash fertilizer needed this season.",
+            correction_pa="K \u0a2c\u0a39\u0a41\u0a24 \u0a39\u0a48 \u2014 \u0a2a\u0a4b\u0a1f\u0a3e\u0a38\u0a3c \u0a16\u0a3e\u0a26 \u0a26\u0a40 \u0a32\u0a4b\u0a5c \u0a28\u0a39\u0a40\u0a02\u0964",
+        ))
+
+    # -- Zinc -------------------------------------------------------------------
+    if zinc_status == "deficient":
+        score -= 12
+        deficiencies.append(SoilDeficiency(
+            nutrient="Zinc (Zn)", status="deficient", severity="moderate",
+            correction="Apply Zinc Sulphate (ZnSO4) at 10 kg/acre once every 3 years.",
+            correction_pa="\u0a1c\u0a3c\u0a3f\u0a70\u0a15 \u0a38\u0a32\u0a2b\u0a3c\u0a47\u0a1f @ 10 \u0a15\u0a3f\u0a32\u0a4b/\u0a0f\u0a15\u0a5c \u0a39\u0a30 3 \u0a38\u0a3e\u0a32 \u0a2c\u0a3e\u0a05\u0a26 \u0a2a\u0a3e\u0a13\u0964",
+        ))
+        correction_plan.append("Apply Zinc Sulphate 10 kg/acre - critical in Malwa and Doaba zones.")
+    elif zinc_status == "marginal":
+        score -= 5
+        deficiencies.append(SoilDeficiency(
+            nutrient="Zinc (Zn)", status="marginal", severity="minor",
+            correction="Foliar ZnSO4 0.5% solution spray 2-3 weeks after sowing.",
+            correction_pa="0.5% ZnSO4 \u0a2b\u0a3c\u0a4b\u0a32\u0a40\u0a05\u0a30 \u0a38\u0a2a\u0a30\u0a47\u0a05 \u0a2c\u0a40\u0a1c\u0a3e\u0a08 \u0a24\u0a4b\u0a02 2-3 \u0a39\u0a2b\u0a3c\u0a24\u0a47 \u0a2c\u0a3e\u0a05\u0a26 \u0a15\u0a30\u0a4b\u0964",
+        ))
+
+    # -- pH ---------------------------------------------------------------------
+    ph_advice = None
+    if req.ph is not None:
+        if req.ph > 8.5:
+            score -= 10
+            ph_advice = f"Highly alkaline soil (pH {req.ph:.1f}). Apply Gypsum at 400 kg/acre to lower pH."
+            correction_plan.append(f"[CRITICAL] Alkaline pH ({req.ph:.1f}) - apply Gypsum 400 kg/acre before sowing.")
+        elif req.ph > 8.0:
+            score -= 5
+            ph_advice = f"Mildly alkaline (pH {req.ph:.1f}). Apply Gypsum at 200 kg/acre. Add organic matter."
+        elif req.ph < 6.5:
+            score -= 8
+            ph_advice = f"Acidic soil (pH {req.ph:.1f}). Apply agricultural lime at 200-400 kg/acre."
+        else:
+            ph_advice = f"Soil pH {req.ph:.1f} is in the optimal range (6.5-8.0). No correction needed."
+
+    # -- Organic Carbon ---------------------------------------------------------
+    oc_advice = "Add 4-6 tonnes/acre of well-decomposed FYM or compost. Use green manure (sesbania) in summer."
+    if oc_status == "medium":
+        oc_advice = "Organic carbon is moderate. Apply 2-3 tonnes/acre of compost annually."
+    elif oc_status == "high":
+        oc_advice = "Organic carbon is good. Continue current organic practices."
+    else:
+        score -= 8
+        correction_plan.append("Add 4-6 tonnes/acre FYM/compost or use green manure to improve organic carbon.")
+
+    # -- Final score + rating ---------------------------------------------------
+    score = max(0, min(100, score))
+    if score >= 80:
+        rating, rating_pa = "excellent", "\u0a2c\u0a39\u0a41\u0a24 \u0a35\u0a27\u0a40\u0a06"
+    elif score >= 60:
+        rating, rating_pa = "good", "\u0a1a\u0a70\u0a17\u0a40"
+    elif score >= 40:
+        rating, rating_pa = "fair", "\u0a20\u0a40\u0a15"
+    else:
+        rating, rating_pa = "poor", "\u0a2e\u0a3e\u0a5c\u0a40"
+
+    if not correction_plan:
+        correction_plan = ["Soil is in good condition. Maintain regular soil testing every 2-3 years."]
+
+    return SoilHealthReport(
+        district=req.district,
+        zone=zone,
+        health_score=score,
+        health_rating=rating,
+        health_rating_pa=rating_pa,
+        deficiencies=deficiencies,
+        correction_plan=correction_plan,
+        organic_matter_advice=oc_advice,
+        ph_advice=ph_advice,
+        overall_tip=(
+            "Punjab soils are typically low in organic carbon and often zinc-deficient (Malwa/Doaba). "
+            "Regular soil testing every 2-3 years and crop rotation with legumes are the most "
+            "cost-effective soil improvement strategies."
+        ),
+        overall_tip_pa=(
+            "\u0a2a\u0a70\u0a1c\u0a3e\u0a2c \u0a26\u0a40 \u0a2e\u0a3f\u0a71\u0a1f\u0a40 \u0a35\u0a3f\u0a71\u0a1a \u0a06\u0a2e \u0a24\u0a4c\u0a30 '\u0a24\u0a47 \u0a1c\u0a48\u0a35\u0a3f\u0a15 \u0a15\u0a3e\u0a30\u0a2c\u0a28 \u0a18\u0a71\u0a1f \u0a05\u0a24\u0a47 \u0a1c\u0a3c\u0a3f\u0a70\u0a15 \u0a26\u0a40 \u0a15\u0a2e\u0a40 \u0a39\u0a41\u0a70\u0a26\u0a40 \u0a39\u0a48\u0964 "
+            "\u0a39\u0a30 2-3 \u0a38\u0a3e\u0a32\u0a3e\u0a02 \u0a2c\u0a3e\u0a05\u0a26 \u0a2e\u0a3f\u0a71\u0a1f\u0a40 \u0a2a\u0a30\u0a16 \u0a05\u0a24\u0a47 \u0a26\u0a3e\u0a32\u0a3e\u0a02 \u0a26\u0a40 \u0a35\u0a70\u0a28-\u0a38\u0a41\u0a35\u0a70\u0a28\u0a24\u0a3e \u0a38\u0a2d \u0a24\u0a4b\u0a02 \u0a35\u0a27\u0a40\u0a06 \u0a22\u0a70\u0a17 \u0a39\u0a28\u0964"
+        ),
+    )
