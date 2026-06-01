@@ -59,7 +59,14 @@
     "schedule": "Fertilizer Schedule",
     "zinc": "Zinc Correction",
     "stubble": "Stubble Management",
-    "organic": "Organic Tip"
+    "organic": "Organic Tip",
+    "health_report": "Soil Health Report",
+    "health_score": "Health Score",
+    "health_rating": "Rating",
+    "deficiencies": "Nutrient Deficiencies",
+    "correction_plan": "Correction Plan",
+    "ph_advice": "pH Advice",
+    "enter_npk": "Enter Your Soil NPK Values"
   },
   "market": {
     "title": "Market Prices",
@@ -80,6 +87,54 @@
     "high": "High",
     "medium": "Medium",
     "low": "Low",
-    "acres": "acres"
+    "acres": "acres",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirm_delete": "Are you sure you want to delete this entry?",
+    "offline_data": "Offline Data",
+    "cached_on": "Cached on"
+  },
+  "diary": {
+    "title": "Farm Diary",
+    "new_entry": "New Entry",
+    "no_entries": "No Entries",
+    "no_entries_sub": "Tap + to add your first farm diary entry.",
+    "activity_type": "Activity Type",
+    "note": "Note",
+    "note_required": "Note is required.",
+    "crop_optional": "Crop (optional)",
+    "field_optional": "Field / Plot (optional)",
+    "all": "All",
+    "irrigation": "Irrigation",
+    "fertilizer": "Fertilizer",
+    "pesticide": "Pesticide",
+    "sowing": "Sowing",
+    "harvest": "Harvest",
+    "observation": "Observation",
+    "other": "Other"
+  },
+  "calendar": {
+    "title": "Crop Calendar",
+    "sow": "Sowing",
+    "fertilize": "Fertilization",
+    "irrigate": "Irrigation",
+    "harvest": "Harvest",
+    "pest_watch": "Pest Watch",
+    "zone_note": "Zone Note",
+    "general_tip": "General Tip"
+  },
+  "profit": {
+    "title": "Profit Estimate",
+    "input_cost": "Total Input Cost",
+    "expected_yield": "Expected Yield",
+    "gross_revenue": "Gross Revenue",
+    "net_profit": "Net Profit",
+    "profit_per_acre": "Profit / Acre",
+    "profit_margin": "Margin %",
+    "price_source": "Price Source",
+    "is_profitable": "Profitable",
+    "not_profitable": "Not Profitable",
+    "msp_note": "Based on government MSP"
   }
 }

@@ -59,7 +59,14 @@
     "schedule": "खाद अनुसूची",
     "zinc": "जिंक सुधार",
     "stubble": "पराली प्रबंधन",
-    "organic": "जैविक सुझाव"
+    "organic": "जैविक सुझाव",
+    "health_report": "मिट्टी स्वास्थ्य रिपोर्ट",
+    "health_score": "स्वास्थ्य स्कोर",
+    "health_rating": "दर्जा",
+    "deficiencies": "पोषण कमियाँ",
+    "correction_plan": "सुधार योजना",
+    "ph_advice": "pH सलाह",
+    "enter_npk": "अपनी मिट्टी NPK मान दर्ज करें"
   },
   "market": {
     "title": "मंडी भाव",
@@ -80,6 +87,54 @@
     "high": "अधिक",
     "medium": "मध्यम",
     "low": "कम",
-    "acres": "एकड़"
+    "acres": "एकड़",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "confirm_delete": "क्या आप इस दर्ज को हटाना चाहते हैं?",
+    "offline_data": "ऑफलाइन डेटा",
+    "cached_on": "सहेजा गया"
+  },
+  "diary": {
+    "title": "खेत डायरी",
+    "new_entry": "नई दर्ज",
+    "no_entries": "कोई दर्ज नहीं",
+    "no_entries_sub": "+ बटन दबाकर अपनी पहली खेत डायरी दर्ज करें।",
+    "activity_type": "गतिविधि का प्रकार",
+    "note": "नोट",
+    "note_required": "नोट लिखना ज़रूरी है।",
+    "crop_optional": "फसल (वैकल्पिक)",
+    "field_optional": "खेत / प्लाट (वैकल्पिक)",
+    "all": "सभी",
+    "irrigation": "सिंचाई",
+    "fertilizer": "खाद",
+    "pesticide": "कीटनाशक",
+    "sowing": "बुआई",
+    "harvest": "फसल कटाई",
+    "observation": "निरीक्षण",
+    "other": "अन्य"
+  },
+  "calendar": {
+    "title": "फसल कैलेंडर",
+    "sow": "बुआई",
+    "fertilize": "खाद",
+    "irrigate": "सिंचाई",
+    "harvest": "फसल कटाई",
+    "pest_watch": "कीट निगरानी",
+    "zone_note": "ज़ोन नोट",
+    "general_tip": "सामान्य सुझाव"
+  },
+  "profit": {
+    "title": "लाभ अनुमान",
+    "input_cost": "कुल लागत",
+    "expected_yield": "अनुमानित उपज",
+    "gross_revenue": "कुल आमदनी",
+    "net_profit": "शुद्ध लाभ",
+    "profit_per_acre": "लाभ / एकड़",
+    "profit_margin": "मार्जिन %",
+    "price_source": "भाव स्रोत",
+    "is_profitable": "लाभदायक",
+    "not_profitable": "घाटे वाला",
+    "msp_note": "सरकारी MSP के अनुसार"
   }
 }

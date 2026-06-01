@@ -59,7 +59,14 @@
     "schedule": "ਖਾਦ ਸਮਾਂ-ਸੂਚੀ",
     "zinc": "ਜ਼ਿੰਕ ਸੁਧਾਰ",
     "stubble": "ਪਰਾਲੀ ਪ੍ਰਬੰਧਨ",
-    "organic": "ਜੈਵਿਕ ਸੁਝਾਅ"
+    "organic": "ਜੈਵਿਕ ਸੁਝਾਅ",
+    "health_report": "ਮਿੱਟੀ ਸਿਹਤ ਰਿਪੋਰਟ",
+    "health_score": "ਸਿਹਤ ਸਕੋਰ",
+    "health_rating": "ਦਰਜਾ",
+    "deficiencies": "ਪੋਸ਼ਣ ਕਮੀਆਂ",
+    "correction_plan": "ਸੁਧਾਰ ਯੋਜਨਾ",
+    "ph_advice": "pH ਸਲਾਹ",
+    "enter_npk": "ਆਪਣੀ ਮਿੱਟੀ NPK ਕੀਮਤਾਂ ਦਰਜ ਕਰੋ"
   },
   "market": {
     "title": "ਮੰਡੀ ਭਾਅ",
@@ -80,6 +87,54 @@
     "high": "ਵੱਧ",
     "medium": "ਦਰਮਿਆਨਾ",
     "low": "ਘੱਟ",
-    "acres": "ਏਕੜ"
+    "acres": "ਏਕੜ",
+    "save": "ਸੇਵ ਕਰੋ",
+    "cancel": "ਰੱਦ ਕਰੋ",
+    "delete": "ਮਿਟਾਓ",
+    "confirm_delete": "ਕੀ ਤੁਸੀਂ ਇਹ ਦਰਜ ਮਿਟਾਉਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "offline_data": "ਆਫ਼ਲਾਈਨ ਡੇਟਾ",
+    "cached_on": "ਸੇਵ ਕੀਤਾ ਗਿਆ"
+  },
+  "diary": {
+    "title": "ਖੇਤ ਡਾਇਰੀ",
+    "new_entry": "ਨਵੀਂ ਦਰਜ",
+    "no_entries": "ਕੋਈ ਦਰਜ ਨਹੀਂ",
+    "no_entries_sub": "+ ਬਟਨ ਦਬਾ ਕੇ ਆਪਣੀ ਪਹਿਲੀ ਖੇਤ ਡਾਇਰੀ ਦਰਜ ਕਰੋ।",
+    "activity_type": "ਗਤੀਵਿਧੀ ਦੀ ਕਿਸਮ",
+    "note": "ਨੋਟ",
+    "note_required": "ਨੋਟ ਲਿਖਣਾ ਜ਼ਰੂਰੀ ਹੈ।",
+    "crop_optional": "ਫ਼ਸਲ (ਵਿਕਲਪਿਕ)",
+    "field_optional": "ਖੇਤ / ਪਲਾਟ (ਵਿਕਲਪਿਕ)",
+    "all": "ਸਾਰੇ",
+    "irrigation": "ਸਿੰਚਾਈ",
+    "fertilizer": "ਖਾਦ",
+    "pesticide": "ਕੀਟਨਾਸ਼ਕ",
+    "sowing": "ਬਿਜਾਈ",
+    "harvest": "ਵਾਢੀ",
+    "observation": "ਨਿਰੀਖਣ",
+    "other": "ਹੋਰ"
+  },
+  "calendar": {
+    "title": "ਫ਼ਸਲ ਕੈਲੰਡਰ",
+    "sow": "ਬਿਜਾਈ",
+    "fertilize": "ਖਾਦ",
+    "irrigate": "ਸਿੰਚਾਈ",
+    "harvest": "ਵਾਢੀ",
+    "pest_watch": "ਕੀੜਾ ਨਿਗਰਾਨੀ",
+    "zone_note": "ਜ਼ੋਨ ਨੋਟ",
+    "general_tip": "ਆਮ ਸੁਝਾਅ"
+  },
+  "profit": {
+    "title": "ਮੁਨਾਫ਼ਾ ਅਨੁਮਾਨ",
+    "input_cost": "ਕੁੱਲ ਲਾਗਤ",
+    "expected_yield": "ਅਨੁਮਾਨਿਤ ਝਾੜ",
+    "gross_revenue": "ਕੁੱਲ ਆਮਦਨ",
+    "net_profit": "ਸ਼ੁੱਧ ਮੁਨਾਫ਼ਾ",
+    "profit_per_acre": "ਮੁਨਾਫ਼ਾ / ਏਕੜ",
+    "profit_margin": "ਮਾਰਜਿਨ %",
+    "price_source": "ਭਾਅ ਸਰੋਤ",
+    "is_profitable": "ਫ਼ਾਇਦੇਮੰਦ",
+    "not_profitable": "ਘਾਟੇ ਵਾਲਾ",
+    "msp_note": "ਸਰਕਾਰੀ MSP ਅਨੁਸਾਰ"
   }
 }
