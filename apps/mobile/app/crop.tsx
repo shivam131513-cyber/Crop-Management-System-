@@ -114,15 +114,25 @@ function CropCard({ crop, index }: { crop: any; index: number }) {
 }
 
 export default function CropScreen() {
-  const { profile } = useAppStore();
+  const { profile, saveCropRecommendation, loadCachedCropRecommendation } = useAppStore();
   const [season, setSeason] = useState('kharif');
   const [soil, setSoil] = useState('loamy');
   const [water, setWater] = useState('medium');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any>(null);
+  const [fromCache, setFromCache] = useState(false);
+  const [cachedAt, setCachedAt] = useState<number | null>(null);
+
+  const currentQuery = {
+    district: profile.district,
+    season,
+    soil,
+    water,
+  };
 
   const getAdvice = async () => {
     setLoading(true);
+    setFromCache(false);
     try {
       const resp = await cropApi.recommend({
         district: profile.district,
@@ -132,8 +142,22 @@ export default function CropScreen() {
         land_size_acres: profile.landAcres || 2,
       });
       setResult(resp.data);
+      // Persist to offline cache so farmer can access without internet
+      await saveCropRecommendation(currentQuery, resp.data);
     } catch (err: any) {
-      Alert.alert('ਗਲਤੀ', 'ਸਲਾਹ ਲੈਣ ਵਿੱਚ ਸਮੱਸਿਆ। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।');
+      // Network error — try the offline cache before showing error
+      const cached = await loadCachedCropRecommendation(currentQuery);
+      if (cached) {
+        setResult(cached);
+        setFromCache(true);
+        setCachedAt(cached._cachedAt ?? null);
+        Alert.alert(
+          'ਆਫ਼ਲਾਈਨ ਮੋਡ',
+          'ਇੰਟਰਨੈੱਟ ਨਹੀਂ ਮਿਲਿਆ। ਪਿਛਲੀ ਸੇਵ ਕੀਤੀ ਫ਼ਸਲ ਸਲਾਹ ਦਿਖਾਈ ਜਾ ਰਹੀ ਹੈ।',
+        );
+      } else {
+        Alert.alert('ਗਲਤੀ', 'ਸਲਾਹ ਲੈਣ ਵਿੱਚ ਸਮੱਸਿਆ। ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ।');
+      }
     } finally {
       setLoading(false);
     }
@@ -158,6 +182,17 @@ export default function CropScreen() {
       {/* Results */}
       {result && (
         <View>
+          {/* Offline cache banner */}
+          {fromCache && (
+            <View style={styles.cacheBanner}>
+              <Ionicons name="cloud-offline-outline" size={14} color="#7EC8E3" />
+              <Text style={styles.cacheBannerText}>
+                {' '}ਆਫ਼ਲਾਈਨ ਡੇਟਾ
+                {cachedAt ? ` · ${new Date(cachedAt).toLocaleDateString('pa-IN')}` : ''}
+              </Text>
+            </View>
+          )}
+
           {/* Stubble warning */}
           {result.stubble_warning && (
             <View style={styles.stubbleCard}>
@@ -256,4 +291,19 @@ const styles = StyleSheet.create({
   },
   slotCardTitle: { color: '#FFD700', fontWeight: '700', marginBottom: 6 },
   slotItem: { color: colors.accentSoft, fontSize: 13, marginVertical: 2 },
+  cacheBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#0A1628',
+    borderRadius: radius.sm,
+    padding: spacing.sm,
+    marginBottom: spacing.sm,
+    borderWidth: 1,
+    borderColor: '#7EC8E344',
+  },
+  cacheBannerText: {
+    color: '#7EC8E3',
+    fontSize: 12,
+    fontStyle: 'italic',
+  },
 });

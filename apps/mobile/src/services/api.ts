@@ -56,6 +56,9 @@ export const cropApi = {
   recommend: (payload: object) => api.post('/crop/recommend', payload),
   getSeasons: () => api.get('/crop/seasons'),
   getSoilTypes: () => api.get('/crop/soil-types'),
+  getCalendar: (district?: string, month?: number) =>
+    api.get('/crop/calendar', { params: { district, month } }),
+  getProfitEstimate: (payload: object) => api.post('/crop/profit-estimate', payload),
 };
 
 export const weatherApi = {
@@ -71,6 +74,7 @@ export const pestApi = {
 export const soilApi = {
   recommend: (payload: object) => api.post('/soil/recommend', payload),
   getZones: () => api.get('/soil/zones'),
+  healthReport: (payload: object) => api.post('/soil/health-report', payload),
 };
 
 export const marketApi = {
