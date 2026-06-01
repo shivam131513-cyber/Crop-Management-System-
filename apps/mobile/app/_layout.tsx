@@ -81,6 +81,16 @@ export default function RootLayout() {
               headerTitle: 'Market Prices',
             }}
           />
+          <Tabs.Screen
+            name="diary"
+            options={{
+              title: 'ਡਾਇਰੀ',
+              tabBarIcon: ({ color, size }) => (
+                <Ionicons name="book-outline" size={size} color={color} />
+              ),
+              headerTitle: 'ਖੇਤ ਡਾਇਰੀ • Farm Diary',
+            }}
+          />
         </Tabs>
       </SafeAreaProvider>
     </GestureHandlerRootView>
