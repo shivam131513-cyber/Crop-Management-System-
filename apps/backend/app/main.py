@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from app.routers import crop, weather, pest, soil, market, auth
+from app.routers import crop, weather, pest, soil, market, auth, water
 from app.db.database import engine
 from app.db import models
 from app.middleware.rate_limit import RateLimitMiddleware
@@ -37,6 +37,7 @@ app.include_router(weather.router, prefix="/weather", tags=["Weather"])
 app.include_router(pest.router,    prefix="/pest",    tags=["Pest Detection"])
 app.include_router(soil.router,    prefix="/soil",    tags=["Soil & Fertilizer"])
 app.include_router(market.router,  prefix="/market",  tags=["Market Prices"])
+app.include_router(water.router,   prefix="/water",   tags=["Water & Irrigation"])
 
 
 @app.get("/", tags=["Health"])
@@ -45,7 +46,7 @@ async def root():
         "status": "ok",
         "app": "Kisaan Saathi",
         "version": "1.0.0",
-        "modules": ["crop", "weather", "pest", "soil", "market", "auth"],
+        "modules": ["crop", "weather", "pest", "soil", "market", "auth", "water"],
     }
 
 
