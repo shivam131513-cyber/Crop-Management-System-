@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from app.routers import crop, weather, pest, soil, market, auth, water, rotation
+from app.routers import crop, weather, pest, soil, market, auth, water, rotation, analytics
 from app.db.database import engine
 from app.db import models
 from app.middleware.rate_limit import RateLimitMiddleware
@@ -39,6 +39,7 @@ app.include_router(soil.router,    prefix="/soil",    tags=["Soil & Fertilizer"]
 app.include_router(market.router,  prefix="/market",  tags=["Market Prices"])
 app.include_router(water.router,   prefix="/water",   tags=["Water & Irrigation"])
 app.include_router(rotation.router, prefix="/crop",   tags=["Crop Rotation"])
+app.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 
 
 @app.get("/", tags=["Health"])
