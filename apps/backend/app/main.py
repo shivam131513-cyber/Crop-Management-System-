@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
 
-from app.routers import crop, weather, pest, soil, market, auth, water, rotation, analytics, notifications, export_data
+from app.routers import crop, weather, pest, soil, market, auth, water, rotation, analytics, notifications, export_data, scheme
 from app.db.database import engine
 from app.db import models
 from app.middleware.rate_limit import RateLimitMiddleware
@@ -13,7 +13,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Kisaan Saathi API",
     description="AI-powered crop advisory backend for Punjab farmers (SIH25010)",
-    version="1.0.0",
+    version="2.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
@@ -42,6 +42,7 @@ app.include_router(rotation.router, prefix="/crop",   tags=["Crop Rotation"])
 app.include_router(analytics.router, prefix="/analytics", tags=["Analytics"])
 app.include_router(notifications.router, prefix="/notifications", tags=["Notifications"])
 app.include_router(export_data.router,   prefix="/export",        tags=["Export"])
+app.include_router(scheme.router,        prefix="/scheme",        tags=["Govt Schemes"])
 
 
 @app.get("/", tags=["Health"])
