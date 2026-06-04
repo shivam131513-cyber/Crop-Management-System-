@@ -217,3 +217,56 @@ async def get_msp():
             for k, v in MSP_2024.items()
         ]
     }
+
+
+@router.get("/compare")
+async def compare_prices(
+    crop: str = Query(..., description="Crop to compare across districts (e.g. wheat, rice)"),
+):
+    """
+    Compare a single crop's mandi price across all supported Punjab districts.
+
+    Returns a ranked list from highest to lowest price, helping farmers decide
+    which mandi to sell at. Highlights districts above MSP in green.
+    """
+    crop_lower = crop.lower().strip()
+    msp = MSP_2024.get(crop_lower)
+
+    results = []
+    for district, crops in MOCK_MANDI_PRICES.items():
+        if crop_lower in crops:
+            price = crops[crop_lower]["price"]
+            trend = crops[crop_lower]["trend"]
+            results.append({
+                "district": district.capitalize(),
+                "price_per_quintal": price,
+                "trend": trend,
+                "above_msp": (price >= msp) if msp else None,
+                "premium_over_msp": round(price - msp, 2) if msp else None,
+            })
+
+    if not results:
+        return {
+            "crop": crop,
+            "message": f"No price data for '{crop}' in current mandi records.",
+            "results": [],
+        }
+
+    # Rank highest to lowest price
+    results.sort(key=lambda x: x["price_per_quintal"], reverse=True)
+
+    best = results[0]
+    return {
+        "crop": crop.capitalize(),
+        "crop_pa": CROP_PA_MAP.get(crop_lower, crop),
+        "msp_per_quintal": msp,
+        "best_district": best["district"],
+        "best_price": best["price_per_quintal"],
+        "districts_compared": len(results),
+        "results": results,
+        "tip": (
+            f"Sell at {best['district']} mandi for maximum price (₹{best['price_per_quintal']}/qtl). "
+            "Check e-NAM (enam.gov.in) for real-time bids."
+        ),
+        "tip_pa": f"{best['district']} ਮੰਡੀ ਵਿੱਚ ਵੇਚੋ — ਸਭ ਤੋਂ ਵੱਧ ਭਾਅ। e-NAM ਜ਼ਰੂਰ ਚੈੱਕ ਕਰੋ।",
+    }
