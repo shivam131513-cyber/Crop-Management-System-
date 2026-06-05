@@ -60,6 +60,55 @@ function WeatherCard({ item }: { item: any }) {
   );
 }
 
+function CurrentConditions({ current }: { current: any }) {
+  if (!current) return null;
+  const temp = Math.round(current.temp ?? 0);
+  const feelsLike = Math.round(current.feels_like ?? 0);
+  const humidity = current.humidity ?? '--';
+  const wind = current.wind_speed ?? '--';
+  const desc = current.weather?.[0]?.description ?? '';
+  const sunrise = current.sunrise
+    ? new Date(current.sunrise * 1000).toLocaleTimeString('pa-IN', { hour: '2-digit', minute: '2-digit' })
+    : '--';
+  const sunset = current.sunset
+    ? new Date(current.sunset * 1000).toLocaleTimeString('pa-IN', { hour: '2-digit', minute: '2-digit' })
+    : '--';
+
+  return (
+    <View style={styles.currentCard}>
+      <View style={styles.currentMain}>
+        <Text style={styles.currentTemp}>{temp}°C</Text>
+        <View>
+          <Text style={styles.currentDesc}>{desc}</Text>
+          <Text style={styles.currentFeels}>ਮਹਿਸੂਸ: {feelsLike}°C</Text>
+        </View>
+      </View>
+      <View style={styles.currentGrid}>
+        <View style={styles.currentStat}>
+          <Ionicons name="water" size={16} color="#58A6FF" />
+          <Text style={styles.currentStatLabel}>ਨਮੀ</Text>
+          <Text style={styles.currentStatValue}>{humidity}%</Text>
+        </View>
+        <View style={styles.currentStat}>
+          <Ionicons name="speedometer" size={16} color="#FFA657" />
+          <Text style={styles.currentStatLabel}>ਹਵਾ</Text>
+          <Text style={styles.currentStatValue}>{wind} km/h</Text>
+        </View>
+        <View style={styles.currentStat}>
+          <Text style={{ fontSize: 16 }}>🌅</Text>
+          <Text style={styles.currentStatLabel}>ਸੂਰਜ ਚੜ੍ਹਾਈ</Text>
+          <Text style={styles.currentStatValue}>{sunrise}</Text>
+        </View>
+        <View style={styles.currentStat}>
+          <Text style={{ fontSize: 16 }}>🌇</Text>
+          <Text style={styles.currentStatLabel}>ਸੂਰਜ ਡੁੱਬ</Text>
+          <Text style={styles.currentStatValue}>{sunset}</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
 export default function WeatherScreen() {
   const { profile } = useAppStore();
   const [data, setData] = useState<any>(null);
@@ -134,6 +183,9 @@ export default function WeatherScreen() {
         </View>
       )}
 
+      {/* Current conditions */}
+      <CurrentConditions current={data?.current} />
+
       {/* 7-day forecast */}
       <Text style={styles.sectionTitle}>📅 7 ਦਿਨਾਂ ਦਾ ਪੂਰਵਅਨੁਮਾਨ</Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.forecastScroll}>
@@ -192,4 +244,17 @@ const styles = StyleSheet.create({
   wMax: { fontSize: 20, fontWeight: '700', color: colors.textPrimary },
   wMin: { fontSize: 14, color: colors.textSecondary },
   wHum: { fontSize: 11, color: colors.info, marginTop: 4 },
+  currentCard: {
+    backgroundColor: colors.bgCard, borderRadius: radius.lg,
+    padding: spacing.md, marginBottom: spacing.md,
+    borderWidth: 1, borderColor: colors.bgSurface,
+  },
+  currentMain: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, marginBottom: spacing.md },
+  currentTemp: { fontSize: 56, fontWeight: '800', color: colors.textPrimary },
+  currentDesc: { fontSize: 14, color: colors.textSecondary, textTransform: 'capitalize' },
+  currentFeels: { fontSize: 12, color: colors.textMuted, marginTop: 4 },
+  currentGrid: { flexDirection: 'row', justifyContent: 'space-around' },
+  currentStat: { alignItems: 'center', gap: 4 },
+  currentStatLabel: { fontSize: 10, color: colors.textMuted },
+  currentStatValue: { fontSize: 13, fontWeight: '700', color: colors.textPrimary },
 });
