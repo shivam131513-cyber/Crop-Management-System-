@@ -184,3 +184,76 @@ async def get_profit_estimate(req: ProfitEstimateRequest):
         stubble_warning=stubble_warning,
         advice=data["advice"],
     )
+
+
+# ---------------------------------------------------------------------------
+# Seasonal crop tips — month-specific, Punjab-focused
+# ---------------------------------------------------------------------------
+
+MONTHLY_TIPS: dict[int, dict] = {
+    1:  {"title": "January Tips", "title_pa": "ਜਨਵਰੀ ਸਲਾਹ",
+         "tips": ["Scout wheat fields weekly for yellow and brown rust.", "Apply 2nd urea top-dress for wheat at tillering stage.", "Sow vegetables (peas, carrot) in open fields."],
+         "tips_pa": ["ਕਣਕ ਦੇ ਖੇਤਾਂ ਵਿੱਚ ਹਫ਼ਤੇਵਾਰ ਰਤੂਏ ਦੀ ਜਾਂਚ ਕਰੋ।", "ਕਣਕ ਨੂੰ ਟਿਲਰਿੰਗ ਵੇਲੇ ਦੂਜੀ ਯੂਰੀਆ ਖੁਰਾਕ ਦਿਓ।", "ਮਟਰ, ਗਾਜਰ ਖੁੱਲ੍ਹੇ ਖੇਤਾਂ ਵਿੱਚ ਬੀਜੋ।"]},
+    2:  {"title": "February Tips", "title_pa": "ਫਰਵਰੀ ਸਲਾਹ",
+         "tips": ["Apply last nitrogen dose to wheat.", "Monitor mustard for aphid infestation.", "Protect crops from late frost (cover seedlings at night)."],
+         "tips_pa": ["ਕਣਕ ਨੂੰ ਆਖਰੀ ਨਾਈਟ੍ਰੋਜਨ ਖੁਰਾਕ ਦਿਓ।", "ਸਰ੍ਹੋਂ ਵਿੱਚ ਮਾਹੂ ਦੀ ਜਾਂਚ ਕਰੋ।", "ਦੇਰੀ ਨਾਲ ਠੰਡ ਤੋਂ ਬਚਾਓ — ਰਾਤ ਨੂੰ ਪੌਦੇ ਢੱਕੋ।"]},
+    3:  {"title": "March Tips", "title_pa": "ਮਾਰਚ ਸਲਾਹ",
+         "tips": ["Harvest mustard when pods turn yellow-brown.", "Stop wheat irrigation 3 weeks before harvest.", "Prepare land for summer vegetables."],
+         "tips_pa": ["ਸਰ੍ਹੋਂ ਦੀਆਂ ਫਲੀਆਂ ਪੀਲੀਆਂ-ਭੂਰੀਆਂ ਹੋਣ 'ਤੇ ਵੱਢੋ।", "ਕਟਾਈ ਤੋਂ 3 ਹਫ਼ਤੇ ਪਹਿਲਾਂ ਕਣਕ ਦੀ ਸਿੰਜਾਈ ਬੰਦ ਕਰੋ।", "ਗਰਮੀ ਦੀਆਂ ਸਬਜ਼ੀਆਂ ਲਈ ਜ਼ਮੀਨ ਤਿਆਰ ਕਰੋ।"]},
+    4:  {"title": "April Tips", "title_pa": "ਅਪ੍ਰੈਲ ਸਲਾਹ",
+         "tips": ["Harvest wheat at 12-14% moisture to avoid shattering.", "Begin land preparation for kharif (paddy/maize).", "Apply bio-decomposer on wheat stubble."],
+         "tips_pa": ["ਕਣਕ 12-14% ਨਮੀ 'ਤੇ ਵੱਢੋ।", "ਖ਼ਰੀਫ਼ (ਝੋਨਾ/ਮੱਕੀ) ਲਈ ਜ਼ਮੀਨ ਤਿਆਰ ਕਰੋ।", "ਕਣਕ ਦੀ ਨਾੜ 'ਤੇ ਬਾਇਓ-ਡੀਕੰਪੋਜ਼ਰ ਲਗਾਓ।"]},
+    5:  {"title": "May Tips", "title_pa": "ਮਈ ਸਲਾਹ",
+         "tips": ["Sow moong/mash (Zaid crop) in early May.", "Deep plough fields to expose soil pests to heat.", "Procure paddy nursery seeds — use PR-126 or Pusa Basmati 1509."],
+         "tips_pa": ["ਮਈ ਦੇ ਸ਼ੁਰੂ ਵਿੱਚ ਮੂੰਗੀ/ਮਾਂਹ ਬੀਜੋ।", "ਮਿੱਟੀ ਦੇ ਕੀੜੇ ਨਸ਼ਟ ਕਰਨ ਲਈ ਡੂੰਘੀ ਵਾਹੀ ਕਰੋ।", "ਝੋਨੇ ਦੀ ਨਰਸਰੀ ਲਈ PR-126 ਜਾਂ ਪੂਸਾ ਬਾਸਮਤੀ 1509 ਬੀਜ ਲਓ।"]},
+    6:  {"title": "June Tips", "title_pa": "ਜੂਨ ਸਲਾਹ",
+         "tips": ["Sow paddy nursery (1st–15th June). Transplant after 25-30 days.", "Sow maize in first week of June.", "Apply DAP as basal fertilizer for kharif crops."],
+         "tips_pa": ["ਝੋਨੇ ਦੀ ਨਰਸਰੀ ਲਾਓ (1-15 ਜੂਨ)। 25-30 ਦਿਨ ਬਾਅਦ ਲਵਾਈ।", "ਮੱਕੀ ਜੂਨ ਦੇ ਪਹਿਲੇ ਹਫ਼ਤੇ ਬੀਜੋ।", "ਖ਼ਰੀਫ਼ ਫ਼ਸਲਾਂ ਲਈ ਅਧਾਰ ਖੁਰਾਕ ਵਜੋਂ DAP ਪਾਓ।"]},
+    7:  {"title": "July Tips", "title_pa": "ਜੁਲਾਈ ਸਲਾਹ",
+         "tips": ["Transplant paddy before July 15 (PAU recommendation).", "Monitor fall armyworm in maize weekly.", "Apply zinc sulphate if leaves show interveinal chlorosis."],
+         "tips_pa": ["15 ਜੁਲਾਈ ਤੋਂ ਪਹਿਲਾਂ ਝੋਨੇ ਦੀ ਲਵਾਈ ਕਰੋ (PAU ਸਿਫਾਰਸ਼)।", "ਮੱਕੀ ਵਿੱਚ ਫ਼ੌਜੀ ਸੁੰਡੀ ਦੀ ਹਫ਼ਤੇਵਾਰ ਜਾਂਚ ਕਰੋ।", "ਪੱਤੇ ਪੀਲੇ ਹੋਣ ਤੇ ਜ਼ਿੰਕ ਸਲਫ਼ੇਟ ਲਗਾਓ।"]},
+    8:  {"title": "August Tips", "title_pa": "ਅਗਸਤ ਸਲਾਹ",
+         "tips": ["Watch for BPH (brown plant hopper) in rice. Drain fields for 3-4 days.", "Apply 2nd urea dose to paddy (45-50 days after transplant).", "Install pheromone traps for cotton bollworm @ 5/acre."],
+         "tips_pa": ["ਝੋਨੇ ਵਿੱਚ ਭੂਰੇ ਕੀੜੇ (BPH) ਦੀ ਜਾਂਚ ਕਰੋ। 3-4 ਦਿਨ ਪਾਣੀ ਬੰਦ ਕਰੋ।", "ਲਵਾਈ ਤੋਂ 45-50 ਦਿਨ ਬਾਅਦ ਝੋਨੇ ਨੂੰ ਦੂਜੀ ਯੂਰੀਆ ਖੁਰਾਕ ਦਿਓ।", "ਕਪਾਹ ਵਿੱਚ 5/ਏਕੜ ਫੇਰੋਮੋਨ ਟਰੈਪ ਲਗਾਓ।"]},
+    9:  {"title": "September Tips", "title_pa": "ਸਤੰਬਰ ਸਲਾਹ",
+         "tips": ["Harvest maize at 18-20% moisture to reduce field losses.", "Drain paddy fields 15-20 days before harvest.", "Procure zero-till or happy seeder machines in advance."],
+         "tips_pa": ["ਮੱਕੀ 18-20% ਨਮੀ 'ਤੇ ਵੱਢੋ।", "ਕਟਾਈ ਤੋਂ 15-20 ਦਿਨ ਪਹਿਲਾਂ ਝੋਨੇ ਦੇ ਖੇਤਾਂ ਵਿੱਚੋਂ ਪਾਣੀ ਕੱਢੋ।", "ਜ਼ੀਰੋ-ਟਿੱਲ ਜਾਂ ਹੈਪੀ ਸੀਡਰ ਮਸ਼ੀਨਾਂ ਪਹਿਲਾਂ ਤੋਂ ਬੁੱਕ ਕਰੋ।"]},
+    10: {"title": "October Tips", "title_pa": "ਅਕਤੂਬਰ ਸਲਾਹ",
+         "tips": ["Sow wheat using Zero-Till Drill after paddy harvest.", "Apply PAU bio-decomposer on paddy stubble (do NOT burn).", "Sow potato (Oct 15 – Nov 15) using certified seed."],
+         "tips_pa": ["ਝੋਨੇ ਤੋਂ ਬਾਅਦ ਜ਼ੀਰੋ-ਟਿੱਲ ਨਾਲ ਕਣਕ ਬੀਜੋ।", "ਝੋਨੇ ਦੀ ਨਾੜ 'ਤੇ PAU ਬਾਇਓ-ਡੀਕੰਪੋਜ਼ਰ ਲਗਾਓ — ਸਾੜੋ ਨਾ।", "ਪ੍ਰਮਾਣਿਤ ਬੀਜ ਨਾਲ ਆਲੂ ਬੀਜੋ (15 ਅਕਤੂਬਰ – 15 ਨਵੰਬਰ)।"]},
+    11: {"title": "November Tips", "title_pa": "ਨਵੰਬਰ ਸਲਾਹ",
+         "tips": ["Apply basal fertilizer (DAP + urea) for wheat at sowing.", "Sow mustard (Raya/Gobhi sarson) before Nov 15.", "Do not burn paddy stubble — ₹2,500/acre incentive available."],
+         "tips_pa": ["ਕਣਕ ਬੀਜਾਈ ਵੇਲੇ DAP + ਯੂਰੀਆ ਅਧਾਰ ਖੁਰਾਕ ਦਿਓ।", "15 ਨਵੰਬਰ ਤੋਂ ਪਹਿਲਾਂ ਸਰ੍ਹੋਂ ਬੀਜੋ।", "ਪਰਾਲੀ ਨਾ ਸਾੜੋ — ₹2,500/ਏਕੜ ਪ੍ਰੋਤਸਾਹਨ ਮਿਲਦਾ ਹੈ।"]},
+    12: {"title": "December Tips", "title_pa": "ਦਸੰਬਰ ਸਲਾਹ",
+         "tips": ["Apply 1st urea top-dress to wheat at CRI stage (21 days after sowing).", "Irrigate wheat at crown root initiation stage.", "Protect potato crop from late blight using Mancozeb sprays."],
+         "tips_pa": ["ਕਣਕ ਨੂੰ CRI ਅਵਸਥਾ (21 ਦਿਨ) 'ਤੇ ਪਹਿਲੀ ਯੂਰੀਆ ਖੁਰਾਕ ਦਿਓ।", "CRI ਅਵਸਥਾ 'ਤੇ ਕਣਕ ਦੀ ਸਿੰਜਾਈ ਕਰੋ।", "ਝੁਲਸ ਰੋਗ ਤੋਂ ਬਚਾਓ ਲਈ ਆਲੂ 'ਤੇ ਮੈਨਕੋਜ਼ੇਬ ਸਪਰੇਅ ਕਰੋ।"]},
+}
+
+
+@router.get("/tips")
+async def get_seasonal_tips(
+    month: Optional[int] = Query(None, ge=1, le=12, description="Month (1-12). Defaults to current month."),
+    lang: Optional[str] = Query("pa", description="Language: pa | en"),
+):
+    """
+    Return 3 actionable farm management tips for the given month.
+    Tailored to Punjab's crop calendar (Rabi/Kharif/Zaid cycle).
+    All tips available in Punjabi (Gurmukhi) and English.
+    """
+    from datetime import date as _date
+    target = month or _date.today().month
+    data = MONTHLY_TIPS.get(target)
+    if not data:
+        from fastapi import HTTPException as _HTTPException
+        raise _HTTPException(status_code=404, detail=f"No tips found for month {target}.")
+
+    tips_out = data["tips_pa"] if lang == "pa" else data["tips"]
+    return {
+        "month": target,
+        "title": data["title_pa"] if lang == "pa" else data["title"],
+        "language": lang,
+        "tips": tips_out,
+        "tips_en": data["tips"],
+        "tips_pa": data["tips_pa"],
+        "source": "PAU (Punjab Agricultural University) seasonal advisory",
+    }
