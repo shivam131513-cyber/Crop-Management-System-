@@ -6,6 +6,7 @@ from app.routers import crop, weather, pest, pest_alert, soil, market, auth, wat
 from app.db.database import engine
 from app.db import models
 from app.middleware.rate_limit import RateLimitMiddleware
+from app.middleware.request_logger import RequestLoggingMiddleware
 
 # Create tables on startup
 models.Base.metadata.create_all(bind=engine)
@@ -29,6 +30,8 @@ app.add_middleware(
 )
 # Rate limiting — uses Redis when REDIS_URL is set, falls back to in-memory
 app.add_middleware(RateLimitMiddleware)
+# Structured JSON access logging with X-Request-ID header injection
+app.add_middleware(RequestLoggingMiddleware)
 
 # Routers
 app.include_router(auth.router,    prefix="/auth",    tags=["Auth"])
