@@ -1,9 +1,24 @@
 version: '3.9'
 
+# ─── Kisaan Saathi — Local Development Stack ──────────────────────────────────
+# Services:
+#   postgres  — primary relational database (farmer data, diary, soil reports)
+#   redis     — rate-limit store + notification pub/sub + session cache
+#   api       — FastAPI backend (hot-reload via uvicorn --reload)
+#   nginx     — reverse proxy + gzip + CORS headers (production simulation)
+#
+# Quick start:
+#   cp .env.example .env        # fill in OPENWEATHERMAP_KEY
+#   docker compose up --build
+#   API docs: http://localhost/docs
+# ─────────────────────────────────────────────────────────────────────────────
+
 services:
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
   postgres:
     image: postgres:16-alpine
     container_name: kisaan_postgres
+    restart: unless-stopped
     environment:
       POSTGRES_USER: kisaan
       POSTGRES_PASSWORD: kisaan123
@@ -18,26 +33,34 @@ services:
       timeout: 5s
       retries: 5
 
+  # ── Redis ───────────────────────────────────────────────────────────────────
   redis:
     image: redis:7-alpine
     container_name: kisaan_redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 3s
       retries: 3
 
+  # ── FastAPI Backend ──────────────────────────────────────────────────────────
   api:
     build:
       context: ./apps/backend
       dockerfile: Dockerfile
     container_name: kisaan_api
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://kisaan:kisaan123@postgres:5432/kisaandb
       REDIS_URL: redis://redis:6379
       OPENWEATHERMAP_KEY: ${OPENWEATHERMAP_KEY:-}
+      JWT_SECRET: ${JWT_SECRET:-kisaan-saathi-secret-change-in-prod}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
     ports:
       - "8000:8000"
     depends_on:
@@ -47,8 +70,21 @@ services:
         condition: service_healthy
     volumes:
       - ./apps/backend:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload --log-level ${LOG_LEVEL:-info}
+
+  # ── Nginx Reverse Proxy (Production Simulation) ────────────────────────────
+  nginx:
+    image: nginx:1.25-alpine
+    container_name: kisaan_nginx
     restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+    profiles:
+      - prod   # only started with: docker compose --profile prod up
 
 volumes:
   pgdata:
