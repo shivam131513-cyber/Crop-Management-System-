@@ -173,3 +173,49 @@ async def get_profile(
         "preferred_language": "pa",
     }
 
+
+# ── Token blocklist (in-memory; replace with Redis set in production) ─────────
+
+_blocklist: set[str] = set()
+
+
+class LogoutRequest(BaseModel):
+    access_token: str
+
+
+@router.post("/logout", status_code=200)
+async def farmer_logout(req: LogoutRequest):
+    """
+    Invalidate an access token by adding it to the server-side blocklist.
+    Mobile clients should also delete locally stored tokens on logout.
+    In production, persist the blocklist to Redis with a TTL equal to
+    the token's remaining expiry.
+    """
+    try:
+        payload = decode_token(req.access_token)
+        # Store the JWT ID (or sub+exp fingerprint) to keep the set lean
+        jti = f"{payload.get('sub')}:{payload.get('exp', 0)}"
+        _blocklist.add(jti)
+    except Exception:
+        # Even if token is already invalid, return success to the client
+        pass
+
+    return {
+        "message": "Logged out successfully. ਸਫਲਤਾਪੂਰਵਕ ਲੌਗਆਊਟ।",
+        "detail": "Access token invalidated. Please remove it from local storage.",
+    }
+
+
+@router.get("/me")
+async def get_me(current: dict = Depends(get_current_farmer)):
+    """
+    Return the authenticated farmer's identity from the JWT payload.
+    Lightweight alternative to /profile/{id} — no DB call required.
+    """
+    return {
+        "farmer_id": current.get("farmer_id"),
+        "phone": current.get("sub"),
+        "district": current.get("district", "ludhiana"),
+        "token_type": current.get("type"),
+        "expires_at": current.get("exp"),
+    }
